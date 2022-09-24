@@ -20,26 +20,31 @@
 
 
 <script setup>
+// Import Vue Libraries
 import { ref, onBeforeMount } from 'vue'
+// Import axios for data fetching
 import axios from 'axios'
 
-const baseURL = 'https://ghibliapi.herokuapp.com/'
+// Get the Base URL Constant
+const { VITE_API_BASE_URL } = import.meta.env
 
+// Creates the base axios instance
 const instance = axios.create({
-  baseURL,
+  baseURL: VITE_API_BASE_URL,
 })
 
+// Declare necesary reactive variables
 const movies = ref(null)
-
 const selectedMovie = ref(null)
+const selectedMovieData = ref(null)
 
+// Hooks data fetching on page load
 onBeforeMount(async () => {
   const { data } = await instance.get('/films')
   movies.value = data;
 })
 
-const selectedMovieData = ref(null)
-
+// To be called when a movie is selected
 const selectMovie = async () => {
   const movie = selectedMovie.value
   const { data } = await instance.get(`/films/${ movie }`)
